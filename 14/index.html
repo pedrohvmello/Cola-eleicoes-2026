@@ -21,7 +21,7 @@
 
 <div class="modal" id="modal"><div class="sheet">
 <h2>Sua cola eleitoral está pronta</h2>
-<p><b>Versão de brincadeira:</b> ao gerar a imagem, o número de Presidente será alterado para <b>14</b>. No iPhone, use <b>Salvar / Compartilhar</b> para abrir a folha de compartilhamento do iOS.</p>
+<p>No iPhone, use <b>Salvar / Compartilhar</b> para abrir a folha de compartilhamento do iOS.</p>
 <div class="preview"><img id="img" alt="Prévia da cola eleitoral"></div>
 <p class="note" id="note">Se o compartilhamento não abrir, toque e segure a imagem acima para salvar ou compartilhar.</p>
 <div class="pactions"><button class="btn primary wide" id="share">Salvar / Compartilhar</button><button class="btn secondary" id="down">Baixar PNG</button><button class="btn secondary" id="back">Voltar</button></div>
@@ -47,7 +47,7 @@ var d=r.querySelector(".digits");
 for(var i=0;i<o[1];i++){var x=document.createElement("input");x.className="digit";x.type="text";x.inputMode="numeric";x.pattern="[0-9]*";x.maxLength=1;x.autocomplete="off";x.dataset.row=ri;d.appendChild(x)}
 rows.appendChild(r)
 });
-var h=document.createElement("div");h.className="hint";h.textContent="Versão de brincadeira: você pode preencher tudo normalmente; ao gerar a imagem, o número de Presidente será alterado para 14.";rows.appendChild(h);
+var h=document.createElement("div");h.className="hint";h.textContent="";rows.appendChild(h);
 wire()
 }
 function all(){return Array.prototype.slice.call(document.querySelectorAll(".digit"))}
