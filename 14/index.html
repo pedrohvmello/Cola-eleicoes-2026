@@ -65,9 +65,9 @@ function loadExtraPhoto(){
 
     var fileName="file_000000007cb4820e97d064083958ea3f.png";
     var sources=[
-      "/14/"+fileName+"?v=3bfd0f8",
-      location.origin+"/14/"+fileName+"?v=3bfd0f8",
-      "https://raw.githubusercontent.com/pedrohvmello/Cola-eleicoes-2026/main/14/"+fileName+"?v=3bfd0f8"
+      "/14/"+fileName+"?v=ddffc260",
+      location.origin+"/14/"+fileName+"?v=ddffc260",
+      "https://raw.githubusercontent.com/pedrohvmello/Cola-eleicoes-2026/main/14/"+fileName+"?v=ddffc260"
     ];
 
     extraPhotoPromise=new Promise(function(resolve,reject){
@@ -102,10 +102,10 @@ function loadExtraPhoto(){
       }
       trySource(0);
     });
+
     return extraPhotoPromise
-  });
-    return extraPhotoPromise
-  }function rr(c,x,y,w,h,r,fill,stroke,lw){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke()}}
+  }
+function rr(c,x,y,w,h,r,fill,stroke,lw){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke()}}
 function draw(){
 var cv=document.getElementById("cv"),c=cv.getContext("2d"),data=vals();data[5].values=["1","4"];var pw=extraPhoto.complete&&extraPhoto.naturalWidth?Math.min(1080,extraPhoto.naturalWidth):1080;var ph=extraPhoto.complete&&extraPhoto.naturalWidth?Math.round(pw*extraPhoto.naturalHeight/extraPhoto.naturalWidth):720;var px=Math.round((1080-pw)/2);cv.width=1080;cv.height=1420+ph;c.clearRect(0,0,1080,cv.height);c.fillStyle="#eef5f9";c.fillRect(0,0,1080,1350);c.fillStyle="#0f6fb6";c.fillRect(0,0,1080,220);c.fillStyle="#fff";c.font="800 64px Arial";c.fillText("ELEIÇÕES 2026",76,92);c.font="400 30px Arial";c.fillText("Anote seus números antes de ir à urna",78,147);
 var y=260;data.forEach(function(o,idx){rr(c,62,y,956,142,24,idx%2?"#fff":"#dcebf7","#6bb4de",2);c.fillStyle="#2788c4";c.beginPath();c.arc(118,y+71,28,0,Math.PI*2);c.fill();c.fillStyle="#fff";c.textAlign="center";c.textBaseline="middle";c.font="800 28px Arial";c.fillText(String(idx+1),118,y+72);c.textAlign="left";c.textBaseline="alphabetic";c.fillStyle="#17324a";c.font="700 29px Arial";c.fillText(o.label,166,y+58);c.fillStyle="#0a4f84";c.font="800 18px Arial";c.fillText(o.digits+" DÍGITOS",166,y+91);
