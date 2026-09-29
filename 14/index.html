@@ -62,11 +62,48 @@ function vals(){return offices.map(function(o,r){return {label:o[0],digits:o[1],
 function loadExtraPhoto(){
     if(extraPhoto.complete&&extraPhoto.naturalWidth)return Promise.resolve();
     if(extraPhotoPromise)return extraPhotoPromise;
+
+    var fileName="file_000000007cb4820e97d064083958ea3f.png";
+    var sources=[
+      "/14/"+fileName+"?v=3bfd0f8",
+      location.origin+"/14/"+fileName+"?v=3bfd0f8",
+      "https://raw.githubusercontent.com/pedrohvmello/Cola-eleicoes-2026/main/14/"+fileName+"?v=3bfd0f8"
+    ];
+
     extraPhotoPromise=new Promise(function(resolve,reject){
-      extraPhoto.onload=function(){resolve()};
-      extraPhoto.onerror=function(){extraPhotoPromise=null;reject(new Error("Falha ao carregar imagem"))};
-      extraPhoto.src="./file_000000007cb4820e97d064083958ea3f.png";
+      function trySource(index){
+        if(index>=sources.length){
+          extraPhotoPromise=null;
+          reject(new Error("Falha ao carregar imagem em todas as fontes"));
+          return;
+        }
+
+        var src=sources[index];
+
+        if(src.indexOf("raw.githubusercontent.com")!==-1){
+          fetch(src,{cache:"no-store",mode:"cors"})
+            .then(function(r){
+              if(!r.ok)throw new Error("HTTP "+r.status);
+              return r.blob();
+            })
+            .then(function(b){
+              var obj=URL.createObjectURL(b);
+              extraPhoto.onload=function(){URL.revokeObjectURL(obj);resolve()};
+              extraPhoto.onerror=function(){URL.revokeObjectURL(obj);trySource(index+1)};
+              extraPhoto.src=obj;
+            })
+            .catch(function(){trySource(index+1)});
+          return;
+        }
+
+        extraPhoto.onload=function(){resolve()};
+        extraPhoto.onerror=function(){trySource(index+1)};
+        extraPhoto.src=src;
+      }
+      trySource(0);
     });
+    return extraPhotoPromise
+  });
     return extraPhotoPromise
   }function rr(c,x,y,w,h,r,fill,stroke,lw){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke()}}
 function draw(){
