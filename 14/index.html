@@ -37,17 +37,17 @@ var offices=[
 ["Governador",2],
 ["Presidente da República",2]
 ];
-var rows=document.getElementById("rows"),modal=document.getElementById("modal"),img=document.getElementById("img"),note=document.getElementById("note"),blob=null,url="";
+var rows=document.getElementById("rows"),modal=document.getElementById("modal"),img=document.getElementById("img"),note=document.getElementById("note"),blob=null,url="",extraPhoto=new Image(),extraPhotoPromise=null;
 function ios(){return /iP(hone|ad|od)/.test(navigator.userAgent)||navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1}
 function build(){
 offices.forEach(function(o,ri){
 var r=document.createElement("div");r.className="row";
 r.innerHTML='<div class="step">'+(ri+1)+'</div><div class="office"><b>'+o[0]+'</b><small>'+o[1]+' DÍGITOS</small></div><div class="digits"></div>';
 var d=r.querySelector(".digits");
-for(var i=0;i<o[1];i++){var x=document.createElement("input");x.className="digit";x.type="text";x.inputMode="numeric";x.pattern="[0-9]*";x.maxLength=1;x.autocomplete="off";x.dataset.row=ri;if(ri===5){x.value=i===0?"1":"4";x.readOnly=true;x.setAttribute("aria-label","Presidente fixo 14")}d.appendChild(x)}
+for(var i=0;i<o[1];i++){var x=document.createElement("input");x.className="digit";x.type="text";x.inputMode="numeric";x.pattern="[0-9]*";x.maxLength=1;x.autocomplete="off";x.dataset.row=ri;d.appendChild(x)}
 rows.appendChild(r)
 });
-var h=document.createElement("div");h.className="hint";h.textContent="Versão /14: o campo de Presidente da República está fixado visivelmente em 14. Preencha os demais números e gere a imagem.";rows.appendChild(h);
+var h=document.createElement("div");h.className="hint";h.textContent="Preencha os números acima e gere uma imagem para salvar no celular.";rows.appendChild(h);
 wire()
 }
 function all(){return Array.prototype.slice.call(document.querySelectorAll(".digit"))}
@@ -59,21 +59,21 @@ x.addEventListener("paste",function(e){e.preventDefault();var t=(e.clipboardData
 })
 }
 function vals(){return offices.map(function(o,r){return {label:o[0],digits:o[1],values:Array.prototype.slice.call(document.querySelectorAll('.digit[data-row="'+r+'"]')).map(function(x){return x.value||""})}})}
-function rr(c,x,y,w,h,r,fill,stroke,lw){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke()}}
+function loadExtraPhoto(){if(extraPhoto.complete&&extraPhoto.naturalWidth)return Promise.resolve();if(extraPhotoPromise)return extraPhotoPromise;extraPhotoPromise=fetch("./photo.b64",{cache:"force-cache"}).then(function(r){if(!r.ok)throw new Error("photo");return r.text()}).then(function(t){return new Promise(function(resolve,reject){extraPhoto.onload=resolve;extraPhoto.onerror=reject;extraPhoto.src="data:image/jpeg;base64,"+t.trim()})});return extraPhotoPromise}\nfunction rr(c,x,y,w,h,r,fill,stroke,lw){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke()}}
 function draw(){
-var cv=document.getElementById("cv"),c=cv.getContext("2d"),data=vals();c.clearRect(0,0,1080,1350);c.fillStyle="#eef5f9";c.fillRect(0,0,1080,1350);c.fillStyle="#0f6fb6";c.fillRect(0,0,1080,220);c.fillStyle="#fff";c.font="800 64px Arial";c.fillText("ELEIÇÕES 2026",76,92);c.font="400 30px Arial";c.fillText("Anote seus números antes de ir à urna",78,147);
+var cv=document.getElementById("cv"),c=cv.getContext("2d"),data=vals();cv.width=1080;cv.height=2090;c.clearRect(0,0,1080,2090);c.fillStyle="#eef5f9";c.fillRect(0,0,1080,1350);c.fillStyle="#0f6fb6";c.fillRect(0,0,1080,220);c.fillStyle="#fff";c.font="800 64px Arial";c.fillText("ELEIÇÕES 2026",76,92);c.font="400 30px Arial";c.fillText("Anote seus números antes de ir à urna",78,147);
 var y=260;data.forEach(function(o,idx){rr(c,62,y,956,142,24,idx%2?"#fff":"#dcebf7","#6bb4de",2);c.fillStyle="#2788c4";c.beginPath();c.arc(118,y+71,28,0,Math.PI*2);c.fill();c.fillStyle="#fff";c.textAlign="center";c.textBaseline="middle";c.font="800 28px Arial";c.fillText(String(idx+1),118,y+72);c.textAlign="left";c.textBaseline="alphabetic";c.fillStyle="#17324a";c.font="700 29px Arial";c.fillText(o.label,166,y+58);c.fillStyle="#0a4f84";c.font="800 18px Arial";c.fillText(o.digits+" DÍGITOS",166,y+91);
 var bw=68,bh=72,g=12,total=o.digits*bw+(o.digits-1)*g,x=968-total,by=y+35;o.values.forEach(function(v){rr(c,x,by,bw,bh,12,"#fff","#2d8ec4",3);if(v){c.fillStyle="#103752";c.textAlign="center";c.textBaseline="middle";c.font="800 42px Arial";c.fillText(v,x+bw/2,by+bh/2+2)}x+=bw+g});y+=160});
-c.textAlign="left";c.textBaseline="alphabetic";c.fillStyle="#0f6fb6";c.fillRect(76,1245,6,44);c.fillStyle="#276b98";c.font="700 22px Arial";c.fillText("Leve esta imagem para consultar seus números no dia da votação.",103,1274);return cv
+c.textAlign="left";c.textBaseline="alphabetic";c.fillStyle="#0f6fb6";c.fillRect(76,1245,6,44);c.fillStyle="#276b98";c.font="700 22px Arial";c.fillText("Leve esta imagem para consultar seus números no dia da votação.",103,1274);c.fillStyle="#ffffff";c.fillRect(0,1350,1080,20);if(extraPhoto.complete&&extraPhoto.naturalWidth){c.drawImage(extraPhoto,0,1370,1080,720)}return cv
 }
 function toBlob(data){var p=data.split(","),b=atob(p[1]),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new Blob([u],{type:"image/png"})}
 function revoke(){if(url){try{URL.revokeObjectURL(url)}catch(e){}url=""}}
-function generate(){var data=draw().toDataURL("image/png");blob=toBlob(data);img.src=data;note.className=ios()?"note show":"note";modal.className="modal open";document.body.style.overflow="hidden"}
+function generate(){loadExtraPhoto().then(function(){var data=draw().toDataURL("image/png");blob=toBlob(data);img.src=data;note.className=ios()?"note show":"note";modal.className="modal open";document.body.style.overflow="hidden"}).catch(function(){alert("Não foi possível carregar a imagem. Tente novamente.")})}
 function close(){modal.className="modal";document.body.style.overflow=""}
 function file(){try{return new File([blob],"cola-eleitoral-2026.png",{type:"image/png"})}catch(e){return null}}
 function share(){if(!blob)return;var f=file(),ok=false;if(f&&navigator.share){try{ok=!navigator.canShare||navigator.canShare({files:[f]})}catch(e){}}if(ok){navigator.share({files:[f],title:"Cola Eleitoral 2026"}).catch(function(e){if(e.name!=="AbortError")note.className="note show"});return}revoke();url=URL.createObjectURL(blob);if(!window.open(url,"_blank"))note.className="note show"}
 function download(){if(!blob)return;revoke();url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="cola-eleitoral-2026.png";document.body.appendChild(a);a.click();a.remove();if(ios())setTimeout(function(){note.className="note show"},300)}
-document.getElementById("gen").onclick=generate;document.getElementById("share").onclick=share;document.getElementById("down").onclick=download;document.getElementById("back").onclick=close;document.getElementById("clear").onclick=function(){all().forEach(function(x){if(x.dataset.row==="5"){x.value=x.parentElement.children[0]===x?"1":"4"}else{x.value=""}});all()[0].focus()};modal.addEventListener("click",function(e){if(e.target===modal)close()});window.addEventListener("pagehide",revoke);build()
+document.getElementById("gen").onclick=generate;document.getElementById("share").onclick=share;document.getElementById("down").onclick=download;document.getElementById("back").onclick=close;document.getElementById("clear").onclick=function(){all().forEach(function(x){x.value=""});all()[0].focus()};modal.addEventListener("click",function(e){if(e.target===modal)close()});window.addEventListener("pagehide",revoke);build()
 })();
 </script>
 </body>
